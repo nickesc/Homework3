@@ -23,9 +23,11 @@ public class MainActivity extends AppCompatActivity {
     Random rand = new Random();
     //private Character character;
     private Button button_character;
+    private Button button_episode;
 
     private static AsyncHttpClient client = new AsyncHttpClient();
     private int[] counts = {-1,1,1,1};
+    private String[] cats= {"","character","location","episode"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +36,19 @@ public class MainActivity extends AppCompatActivity {
         getItemCount(1);
 
         //getItemCount(2);
-        //getItemCount(3);
+        getItemCount(3);
 
         button_character=findViewById(R.id.button_character);
+        button_episode=findViewById(R.id.button_episode);
 
-        button_character.setOnClickListener(v-> loadCharacterFragment(new characterFragment()));
+        button_character.setOnClickListener(v-> loadFragment(new characterFragment(),1));
+        button_episode.setOnClickListener(v-> loadFragment(new episodeFragment(),3));
 
 
     }
 
     public void getItemCount(int categoryNum){
-        String[] cats= {"","character","location","episode"};
+
         String url="https://rickandmortyapi.com/api/"+cats[categoryNum];
         client.get(url, new AsyncHttpResponseHandler() {
             @Override
@@ -64,11 +68,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    public void loadCharacterFragment(Fragment fragment){
-        int id=rand.nextInt(counts[1])+1;
+    public void loadFragment(Fragment fragment, int category){
+        String id=cats[category];
+
+        if (category!=2){
+            id=id+"/"+(rand.nextInt(counts[category])+1);
+        }
         //id=1;
         Log.d("help", "rand id="+id);
-        client.get("https://rickandmortyapi.com/api/character/"+id, new AsyncHttpResponseHandler() {
+        client.get("https://rickandmortyapi.com/api/"+id, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 Bundle bundle = new Bundle();
