@@ -16,14 +16,13 @@ public class Episode {
     public Episode(byte[] response) throws JSONException {
         JSONObject json = new JSONObject(new String(response));
 
-        setId(json.getInt("id"));
+        this.setName(json.getString("name"));
+        this.setNumber(json.getString("episode"));
+        this.setDate(json.getString("air_date"));
 
 
     }
 
-    public int getId() {
-        return id;
-    }
 
     public String getNumber() {
         return number;
@@ -45,9 +44,7 @@ public class Episode {
         return url;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+
 
     public void setNumber(String number) {
         this.number = number;

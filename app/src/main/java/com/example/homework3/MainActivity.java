@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private Button button_character;
     private Button button_episode;
 
-    private static AsyncHttpClient client = new AsyncHttpClient();
+    private static AsyncHttpClient asyncClient = new AsyncHttpClient();
     private int[] counts = {-1,1,1,1};
     private String[] cats= {"","character","location","episode"};
 
@@ -33,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getItemCount(1);
+        //getItemCount(1);
 
         //getItemCount(2);
-        getItemCount(3);
+        //getItemCount(3);
 
         button_character=findViewById(R.id.button_character);
         button_episode=findViewById(R.id.button_episode);
@@ -46,17 +46,40 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+/*
     public void getItemCount(int categoryNum){
 
         String url="https://rickandmortyapi.com/api/"+cats[categoryNum];
-        client.get(url, new AsyncHttpResponseHandler() {
+        asyncClient.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
                     JSONObject json = new JSONObject(new String(responseBody));
                     counts[categoryNum]=json.getJSONObject("info").getInt("count");
                     Log.d("help",""+counts[categoryNum]);
+                    String id=cats[category];
+
+                    if (category!=2){
+                        id=id+"/"+(rand.nextInt(counts[category])+1);
+                    }
+                    //id=1;
+                    Log.d("help", "rand id="+id);
+                    asyncClient.get("https://rickandmortyapi.com/api/"+id, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            Bundle bundle = new Bundle();
+                            bundle.putByteArray("response",responseBody);
+                            fragment.setArguments(bundle);
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.replace(R.id.fcv_main,fragment);
+                            fragmentTransaction.commit();
+                        }
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Log.e("api error", new String((responseBody)));
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -64,32 +87,53 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.e("api error", new String((responseBody)));
+                Log.d("api error", new String((responseBody)));
             }
         });
     }
-    public void loadFragment(Fragment fragment, int category){
-        String id=cats[category];
 
-        if (category!=2){
-            id=id+"/"+(rand.nextInt(counts[category])+1);
-        }
-        //id=1;
-        Log.d("help", "rand id="+id);
-        client.get("https://rickandmortyapi.com/api/"+id, new AsyncHttpResponseHandler() {
+ */
+    public void loadFragment(Fragment fragment, int category){
+        String url="https://rickandmortyapi.com/api/"+cats[category];
+        asyncClient.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Bundle bundle = new Bundle();
-                bundle.putByteArray("response",responseBody);
-                fragment.setArguments(bundle);
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fcv_main,fragment);
-                fragmentTransaction.commit();
+                try {
+                    JSONObject json = new JSONObject(new String(responseBody));
+                    counts[category]=json.getJSONObject("info").getInt("count");
+                    Log.d("help",""+counts[category]);
+
+                    String id=cats[category];
+
+                    if (category!=2){
+                        id=id+"/"+(rand.nextInt(counts[category])+1);
+                    }
+                    //id=1;
+                    Log.d("help", "rand id="+id);
+                    asyncClient.get("https://rickandmortyapi.com/api/"+id, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            Bundle bundle = new Bundle();
+                            bundle.putByteArray("response",responseBody);
+                            fragment.setArguments(bundle);
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.replace(R.id.fcv_main,fragment);
+                            fragmentTransaction.commit();
+                        }
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Log.e("api error", new String((responseBody)));
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
+
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.e("api error", new String((responseBody)));
+                Log.d("api error", new String((responseBody)));
             }
         });
     }
