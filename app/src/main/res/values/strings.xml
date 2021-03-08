@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Homework3</string>
+    <string name="app_name">Rickipedia</string>
     <string name="placeholder"></string>
     <string name="character">Character</string>
     <string name="location">Location</string>
