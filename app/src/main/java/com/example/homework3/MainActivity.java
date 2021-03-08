@@ -95,7 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.d("api error", "API call failed");
+                Log.d("api error", "API call failed, trying again");
+                loadFragment(fragment,category);
             }
         });
     }
