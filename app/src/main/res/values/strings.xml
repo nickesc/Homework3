@@ -4,4 +4,6 @@
     <string name="character">Character</string>
     <string name="location">Location</string>
     <string name="episode">Episode</string>
+    <string name="channelName">channel</string>
+    <string name="channelDescription">description</string>
 </resources>

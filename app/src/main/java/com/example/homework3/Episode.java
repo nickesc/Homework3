@@ -1,7 +1,15 @@
 package com.example.homework3;
 
+import android.util.Log;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 public class Episode {
 
@@ -9,9 +17,11 @@ public class Episode {
     private String number;
     private String name;
     private String date;
-    private String[] characters;
+    private String[] characters = {"","",""};
 
     private String url;
+
+
 
     public Episode(byte[] response) throws JSONException {
         JSONObject json = new JSONObject(new String(response));
@@ -19,6 +29,10 @@ public class Episode {
         this.setName(json.getString("name"));
         this.setNumber(json.getString("episode"));
         this.setDate(json.getString("air_date"));
+        setCharacters(json.getJSONArray("characters"));
+
+        this.setUrl(json.getString("name"));
+        Log.d("help",this.getUrl());
 
 
     }
@@ -58,11 +72,22 @@ public class Episode {
         this.date = date;
     }
 
-    public void setCharacters(String[] characters) {
-        this.characters = characters;
+    public void setCharacters(JSONArray characters) throws JSONException {
+        String[] tempArray={"","",""};
+        for (int i=0; i<characters.length() && i<3;i++){
+
+            this.characters[i]=characters.getString(i);
+
+        }
     }
 
-    public void setUrl(String url) {
+    public void setUrl(String name) {
+        String[] nameArray=name.split(" ");
+        String url="";
+        for(int i=0;i<nameArray.length-1;i++){
+            url=url+nameArray[i]+"_";
+        }
+        url="https://rickandmorty.fandom.com/wiki/"+url+nameArray[nameArray.length-1];
         this.url = url;
     }
 }
