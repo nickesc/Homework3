@@ -70,7 +70,7 @@ public class CharacterFragment extends Fragment {
         epString=epString.substring(0,epString.length()-2);
 
         episodesTV=view.findViewById(R.id.tv_charEpisodes);
-        episodesTV.setText("Episodes: "+epString);
+        episodesTV.setText("Appears in Episode(s): "+epString);
 
 
 
