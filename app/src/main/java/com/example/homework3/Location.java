@@ -9,12 +9,12 @@ public class Location {
     private String type;
     private String dimension;
 
-    public Location(byte[] response) throws JSONException {
-        JSONObject json = new JSONObject(new String(response));
+    public Location(JSONObject response) throws JSONException {
+        //JSONObject json = new JSONObject(new String(response));
 
-        this.setName(json.getString("name"));
-        this.setDimension(json.getString("dimension"));
-        this.setType(json.getString("type"));
+        this.setName(response.getString("name"));
+        this.setDimension(response.getString("dimension"));
+        this.setType(response.getString("type"));
 
 
     }

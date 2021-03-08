@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 
-public class characterFragment extends Fragment {
+public class CharacterFragment extends Fragment {
     private View view;
 
     private ImageView charImageIV;

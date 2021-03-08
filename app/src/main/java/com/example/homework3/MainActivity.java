@@ -1,7 +1,6 @@
 package com.example.homework3;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     //private Character character;
     private Button button_character;
     private Button button_episode;
+    private Button button_location;
 
     private static AsyncHttpClient asyncClient = new AsyncHttpClient();
     private int[] counts = {-1,1,1,1};
@@ -41,16 +41,20 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
 
         button_character=findViewById(R.id.button_character);
+        button_location=findViewById(R.id.button_location);
         button_episode=findViewById(R.id.button_episode);
 
-        button_character.setOnClickListener(v-> loadFragment(new characterFragment(),1));
-        button_episode.setOnClickListener(v-> loadFragment(new episodeFragment(),3));
+        button_character.setOnClickListener(v-> loadFragment(new CharacterFragment(),1));
+        button_location.setOnClickListener(v-> loadFragment(new LocationFragment(),2));
+        button_episode.setOnClickListener(v-> loadFragment(new EpisodeFragment(),3));
 
 
     }
 
     public void loadFragment(Fragment fragment, int category){
+
         String url="https://rickandmortyapi.com/api/"+cats[category];
+
         asyncClient.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

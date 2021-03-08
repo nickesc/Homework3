@@ -28,7 +28,7 @@ import java.util.Arrays;
 
 import cz.msebera.android.httpclient.Header;
 
-public class episodeFragment extends Fragment {
+public class EpisodeFragment extends Fragment {
     private View view;
 
     private Button moreInfoButton;
