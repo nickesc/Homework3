@@ -1,14 +1,21 @@
 package com.example.homework3;
 
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -23,6 +30,8 @@ import cz.msebera.android.httpclient.Header;
 
 public class episodeFragment extends Fragment {
     private View view;
+
+    private Button moreInfoButton;
 
     private TextView numberTV;
     private TextView nameTV;
@@ -117,6 +126,46 @@ public class episodeFragment extends Fragment {
                 Log.e("api error", new String((responseBody)));
             }
         });
+
+        moreInfoButton=view.findViewById(R.id.button_moreInfo);
+        moreInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendNotification(v);
+            }
+        });
+
         return view;
+    }
+
+    public void sendNotification(View view){
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData( Uri.parse(episode.getUrl()));
+
+        Log.d("help",intent.resolveActivity(getContext().getPackageManager()).toString());
+
+        if (intent.resolveActivity(getContext().getPackageManager())!=null) {
+
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), getString(R.string.CHANNEL_ID))
+
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle(episode.getName())
+                    .setContentText(episode.getUrl())
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+
+
+            PendingIntent pending = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(pending);
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getContext());
+            notificationManager.notify(1, builder.build());
+        }
+        else{
+            Log.e("ImplicitIntent", "Cannot handle Intent");
+        }
+
     }
 }

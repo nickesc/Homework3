@@ -60,19 +60,19 @@ public class Episode {
 
 
 
-    public void setNumber(String number) {
+    private void setNumber(String number) {
         this.number = number;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
-    public void setDate(String date) {
+    private void setDate(String date) {
         this.date = date;
     }
 
-    public void setCharacters(JSONArray characters) throws JSONException {
+    private void setCharacters(JSONArray characters) throws JSONException {
         String[] tempArray={"","",""};
         for (int i=0; i<characters.length() && i<3;i++){
 
@@ -81,7 +81,7 @@ public class Episode {
         }
     }
 
-    public void setUrl(String name) {
+    private void setUrl(String name) {
         String[] nameArray=name.split(" ");
         String url="";
         for(int i=0;i<nameArray.length-1;i++){
