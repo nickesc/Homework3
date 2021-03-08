@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +41,9 @@ public class EpisodeFragment extends Fragment {
     private TextView charactersTV1;
     private TextView charactersTV2;
     private TextView charactersTV3;
+    private ImageView charIV1;
+    private ImageView charIV2;
+    private ImageView charIV3;
 
     private static AsyncHttpClient asyncClient = new AsyncHttpClient();
 
@@ -64,7 +69,7 @@ public class EpisodeFragment extends Fragment {
         nameTV.setText(episode.getName());
 
         dateTV=view.findViewById(R.id.tv_date);
-        dateTV.setText(episode.getDate());
+        dateTV.setText("Air Date: "+episode.getDate());
 
         final String[] charString = {"","",""};
 
@@ -73,59 +78,80 @@ public class EpisodeFragment extends Fragment {
         charactersTV2=view.findViewById(R.id.tv_characters2);
         charactersTV3=view.findViewById(R.id.tv_characters3);
 
-        asyncClient.get(episode.getCharacters()[0], new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                try {
-                    String name=new JSONObject(new String(responseBody)).getString("name");
-                    if(!name.equals("")){
-                    charactersTV1.setText(name);}
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        charIV1=view.findViewById(R.id.iv_char1);
+        charIV2=view.findViewById(R.id.iv_char2);
+        charIV3=view.findViewById(R.id.iv_char3);
+
+        getImage(episode.getCharacters()[0], charactersTV1, charIV1);
+        getImage(episode.getCharacters()[1], charactersTV2, charIV2);
+        getImage(episode.getCharacters()[2], charactersTV3, charIV3);
+
+        /*
+        if(!episode.getCharacters()[0].equals("")) {
+            asyncClient.get(episode.getCharacters()[0], new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    try {
+                        String name = new JSONObject(new String(responseBody)).getString("name");
+                        String url = new JSONObject(new String(responseBody)).getString("image");
+                        if (!name.equals("")) {
+                            charactersTV1.setText(name);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.e("api error", new String((responseBody)));
-            }
-        });
-
-        asyncClient.get(episode.getCharacters()[1], new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                try {
-                    String name=new JSONObject(new String(responseBody)).getString("name");
-                    if(!name.equals("")){
-                        charactersTV2.setText(name);}
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.e("api error", new String((responseBody)));
                 }
-            }
+            });
+        }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.e("api error", new String((responseBody)));
-            }
-        });
-
-        asyncClient.get(episode.getCharacters()[2], new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                try {
-                    String name=new JSONObject(new String(responseBody)).getString("name");
-                    if(!name.equals("")){
-                        charactersTV3.setText(name);}
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if(!episode.getCharacters()[1].equals("")) {
+            asyncClient.get(episode.getCharacters()[1], new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    try {
+                        String name = new JSONObject(new String(responseBody)).getString("name");
+                        if (!name.equals("")) {
+                            charactersTV2.setText(name);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Log.e("api error", new String((responseBody)));
-            }
-        });
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.e("api error", new String((responseBody)));
+                }
+            });
+        }
+
+        if(!episode.getCharacters()[2].equals("")) {
+            asyncClient.get(episode.getCharacters()[2], new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    try {
+                        String name = new JSONObject(new String(responseBody)).getString("name");
+                        if (!name.equals("")) {
+                            charactersTV3.setText(name);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.e("api error", new String((responseBody)));
+                }
+            });
+        }
+
+         */
 
         moreInfoButton=view.findViewById(R.id.button_moreInfo);
         moreInfoButton.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +191,30 @@ public class EpisodeFragment extends Fragment {
         }
         else{
             Log.e("ImplicitIntent", "Cannot handle Intent");
+        }
+
+    }
+
+    private void getImage(String charUrl, TextView charTV, ImageView charIV){
+        if(!charUrl.equals("")) {
+            asyncClient.get(charUrl, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    try {
+                        String name = new JSONObject(new String(responseBody)).getString("name");
+                        String imageUrl = new JSONObject(new String(responseBody)).getString("image");
+                        charTV.setText(name);
+                        Picasso.get().load(imageUrl).into(charIV);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Log.e("api error", new String((responseBody)));
+                }
+            });
         }
 
     }

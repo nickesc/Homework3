@@ -67,8 +67,10 @@ public class MainActivity extends AppCompatActivity {
 
                     if (category!=2){
                         id=id+"/"+(rand.nextInt(counts[category])+1);
+                        //id=id+"/"+38;
                     }
                     //id=1;
+
                     Log.d("help", "rand id="+id);
                     asyncClient.get("https://rickandmortyapi.com/api/"+id, new AsyncHttpResponseHandler() {
                         @Override

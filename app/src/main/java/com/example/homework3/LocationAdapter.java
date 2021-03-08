@@ -41,8 +41,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         Location location=locations.get(position);
 
         holder.locNameTV.setText(location.getName());
-        holder.locDimensionTV.setText(location.getDimension());
-        holder.locTypeTV.setText(location.getType());
+        holder.locDimensionTV.setText("Dimension: "+location.getDimension());
+        holder.locTypeTV.setText("Type: "+location.getType());
     }
 
     @Override
